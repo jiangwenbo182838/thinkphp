@@ -1,0 +1,41 @@
+<?php
+/**
+ * Created by
+ * User: 蒋氏
+ *
+ * Time: 07:25
+ */
+
+namespace app\admin\controller;
+use app\common\business\SpecsValue as SpecsValueBis;
+class SpecsValue extends AdminBase {
+    /**
+     * 新增逻辑
+     */
+    public function save() {
+        $specsId = input("param.specs_id", 0, "intval");
+        $name = input("param.name", "", "trim");
+        // validate验证机制自行验证参数
+
+        $data = [
+            "specs_id" => $specsId,
+            "name" => $name,
+        ];
+        $id = (new SpecsValueBis())->add($data);
+        if(!$id) {
+            return show(config('status.error'), "新增失败");
+        }
+
+        return show(config("status.success"), "OK", ["id" => $id]);
+    }
+
+    public function getBySpecsId() {
+        $specsId = input("param.specs_id", 0, "intval");
+        if(!$specsId) {
+            return show(config('status.success'), "没有数据哦");
+        }
+
+        $result = (new SpecsValueBis())->getBySpecsId($specsId);
+        return show(config('status.success'), "OK", $result);
+    }
+}
